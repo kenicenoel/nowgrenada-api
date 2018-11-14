@@ -1,0 +1,25 @@
+{
+  "name": "nowgrenada-api",
+  "version": "1.0.0",
+  "description": "A web scraper for the Now Grenada Website",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenicenoel/nowgrenada-api.git"
+  },
+  "author": "Kenice Noel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kenicenoel/nowgrenada-api/issues"
+  },
+  "homepage": "https://github.com/kenicenoel/nowgrenada-api#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.12",
+    "puppeteer": "^1.10.0"
+  }
+}
