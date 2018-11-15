@@ -1,13 +1,13 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const puppeteer = require('puppeteer');
+const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
-const app = express();
 const PORT = 3000;
 
-
-const baseUrl = 'http://nowgrenada.com' // Enter the website you want to scrape
+let baseUrl = 'http://kenicenoel.com' // Enter the website you want to scrape
 
 app.use(cors());
 // parse application/x-www-form-urlencoded
@@ -16,41 +16,43 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-app.get('/', (req, res) =>
+// start the server
+app.listen(PORT, function() {
+    console.log('Started Now Grenada Scraper');
+  });
+  
+
+app.get('/pdf', () =>
 {
-   // Use Axio to load the website and then loop through the elements with cheerio getting the data needed (:)
-    axios.get(baseUrl).then( (response) => 
-    {
-        let article = {
-            newsTitle: '',
-            newsImage: '',
-            newsSummary: '',
-            url: ''
-        }
-        
-
-        let $ = cheerio.load(response.data);
-        let articles = [];
-        let postWrap = $('.post-wrap').each((i, element) =>
-        {
-        let title = $(element).children().find('h1.h3').text();
-        let url = $(element).children().find('h1.h3').find('a').attr('href');
-        let img = $(element).children().find('.post-thumb').find('img').attr('src');
-        let content = $(element).children().find('div.post-content').find('a').attr('href');
-        article = {
-                "newsTitle": title,
-                "newsImage": img,
-                "newsSummary": content,
-                "url": url
-            }
-            articles.push(article);
-            
-        });
-        console.log(articles);
-        res.status(200).send(articles);
-
-    });
+    savePdf(baseUrl, 'nowgrenada');
 });
+
+async function savePdf(url, outputName)
+{
+    try 
+    {
+        const browser = await puppeteer.launch({ headless: true });
+        let page = await browser.newPage();
+        
+        // navigate to website
+        await page.goto(url);
+        console.log(`navigated to ${url}`);
+        
+        // take a screenshot of the page and save to /screenshots/page/outputName
+        await page.screenshot({
+            path: './screenshots/'+outputName+'.png'
+        });
+
+        // generate a pdf of the page
+        await page.pdf({path: './pdfs/'+outputName+'.pdf'});
+        await browser.close();
+        res.status(200).send(`Saved page as ${outputName}.pdf in /pdfs folder `);
+    } 
+    catch (error) 
+    {
+        console.log(error);   
+    }
+}
 
 
 
