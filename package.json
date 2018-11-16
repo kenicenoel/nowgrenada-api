@@ -6,6 +6,9 @@
   },
   "description": "Scrapes the Now Grenada Website for News articles",
   "main": "app.js",
+  "scripts": {
+    "start": "nodemon ./app.js --exec babel-node -e js"
+  },
   "private": true,
   "author": "Kenice Noel",
   "license": "ISC",

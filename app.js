@@ -13,6 +13,7 @@ let cheerio = require('cheerio');
 app.use(cors());
 app.use(compression()); //Compress all routes
 app.use(helmet());
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({
     extended: false
@@ -44,7 +45,6 @@ app.get('/nowgrenada/scrape', (req,res) =>
             url: ''
         }
 
-
         let $ = cheerio.load(response.data);
         let articles = [];
         $('.post-wrap').each((i, element) => 
@@ -52,11 +52,11 @@ app.get('/nowgrenada/scrape', (req,res) =>
             let title = $(element).children().find('h1.h3').text();
             let url = $(element).children().find('h1.h3').find('a').attr('href');
             let img = $(element).children().find('.post-thumb').find('img').attr('src');
-            let content = $(element).children().find('div.post-content').find('a').attr('href');
+            let content = $(element).find('.post-content ').text();
             article = {
                 "newsTitle": title,
                 "newsImage": img,
-                "newsSummary": content,
+                "newsSummary": content.replace('read more', ''),
                 "url": url
             }
             articles.push(article);
